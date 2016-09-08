@@ -47,7 +47,7 @@ extern "C" {
 
 FLCC_API const char* flcc_version();
 FLCC_API int flcc_register();
-FLCC_API int flcc_rgb2yuv(void* yuv, intptr_t stride_yuv, void* rgb, intptr_t stride_rgb, int width, int height, bool isbgr, bool flip);
+FLCC_API int flcc_rgb2yuv422(void* yuv422, intptr_t stride_yuv422, void* rgb, intptr_t stride_rgb, int width, int height, bool isbgr, bool flip);
 
 #ifdef __cplusplus
 }

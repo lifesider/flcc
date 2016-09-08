@@ -26,40 +26,26 @@
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *************************************************************************/
+#ifndef FLCC_COEFFICIENTS_H
+#define FLCC_COEFFICIENTS_H
 #include "flcc.h"
-#include "utils.h"
-#include "coefficients.h"
+#include <emmintrin.h>
 
-FLCC_API const char* flcc_version()
-{
-	return FLCC_VERSION;
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern __m128 matYUVA2RGBA_SD[4];
+extern __m128 matRGBA2YUVA_SD[4];
+
+// integer optimization, 14 bits magnified
+extern __m128i coefYU_RGBA_SD;
+extern __m128i coefYU_BGRA_SD;
+extern __m128i coefYV_RGBA_SD;
+extern __m128i coefYV_BGRA_SD;
+
+#ifdef __cplusplus
 }
+#endif
 
-FLCC_API int flcc_register()
-{
-	__m128 c14 = _mm_set1_ps(16384.f);
-	__m128i comp = _mm_set_epi16(257, 0, 0, 0, 1, 0, 0, 0);
-
-	// RGB to YUV for standard definition
-	__m128i y = _mm_cvtps_epi32(_mm_mul_ps(c14, matRGBA2YUVA_SD[0]));
-	__m128i u = _mm_cvtps_epi32(_mm_mul_ps(c14, matRGBA2YUVA_SD[1]));
-	__m128i v = _mm_cvtps_epi32(_mm_mul_ps(c14, matRGBA2YUVA_SD[2]));
-	coefYU_RGBA_SD = _mm_or_si128(_mm_packs_epi32(y, u), comp);
-	coefYU_BGRA_SD = _mm_shufflehi_epi16(_mm_shufflelo_epi16(coefYU_RGBA_SD, 0xc6), 0xc6);
-	coefYV_RGBA_SD = _mm_or_si128(_mm_packs_epi32(y, v), comp);
-	coefYV_BGRA_SD = _mm_shufflehi_epi16(_mm_shufflelo_epi16(coefYV_RGBA_SD, 0xc6), 0xc6);
-	
-	return 0;
-}
-
-FLCC_API int flcc_rgb2yuv422(void* yuv422, intptr_t stride_yuv422, void* rgb, intptr_t stride_rgb, int width, int height, bool isbgr, bool flip)
-{
-	if (yuv422 == NULL || rgb == NULL || width <= 0 || height <= 0)
-		return 0;
-	if (flip)
-	{
-		rgb = flcc_offset_raw_ptr(rgb, stride_rgb * (height - 1));
-		stride_rgb = -stride_rgb;
-	}
-	return 0;
-}
+#endif	// FLCC_COEFFICIENTS_H

@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\coefficients.h" />
+    <ClInclude Include="..\src\utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0C3C4A4F-A2EA-473F-9B7F-EF637472954B}</ProjectGuid>
